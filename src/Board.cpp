@@ -95,18 +95,16 @@ bool Board::isValidMove(int fromRow, int fromCol, int toRow, int toCol)
     {
         int direction = (piece.color == PieceColor::White) ? -1 : 1;
 
-        if (!(toRow == fromRow + direction && toCol == fromCol))
+        if (toRow == fromRow + direction)
         {
-            if (toRow == fromRow + direction && (toCol == fromCol + 1 || toCol == fromCol - 1) && !isEmpty(toRow, toCol) && grid[toRow][toCol].color != piece.color)
+            if ((toCol == fromCol + 1 || toCol == fromCol - 1) && !isEmpty(toRow, toCol) && grid[toRow][toCol].color != piece.color)
                 return true;
 
-            return false;
+            else if (toCol == fromCol && grid[toRow][toCol].type == PieceType::empty)
+                return true;
         }
 
-        if (!isEmpty(toRow, toCol))
-            return false;
-
-        return true;
+        return false;
     }
 
     else if (piece.type == PieceType::Rook)
@@ -220,7 +218,10 @@ bool Board::isValidMove(int fromRow, int fromCol, int toRow, int toCol)
             }
         }
 
-        if (toRow > fromRow && toCol > fromCol)
+        else if (!(abs(toRow - fromRow) == abs(toCol - fromCol)))
+            return false;
+
+        else if (toRow > fromRow && toCol > fromCol)
         {
             for (int row = fromRow + 1, col = fromCol + 1; row < toRow; row++, col++)
             {
@@ -271,4 +272,41 @@ bool Board::isValidMove(int fromRow, int fromCol, int toRow, int toCol)
     }
 
     return false;
+}
+
+bool Board::isInCheck(PieceColor color)
+{
+    int kingRow, kingCol;
+
+    for (int row = 0; row < 8; row++)
+    {
+        for (int col = 0; col < 8; col++)
+        {
+            if (grid[row][col].type == PieceType::King && grid[row][col].color == color)
+            {
+                kingRow = row;
+                kingCol = col;
+                break;
+            }
+        }
+    }
+
+    for (int row = 0; row < 8; row++)
+    {
+        for (int col = 0; col < 8; col++)
+        {
+            if (!(grid[row][col].color == color) && grid[row][col].type != PieceType::empty)
+            {
+                if (isValidMove(row, col, kingRow, kingCol))
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void Board::setPiece(int row, int col, Piece piece)
+{
+    grid[row][col] = piece;
 }

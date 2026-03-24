@@ -14,6 +14,10 @@ public:
 
     bool isEmpty(int row, int col);
 
+    bool isInCheck(PieceColor color);
+
+    void setPiece(int row, int col, Piece piece);
+
 private:
     Piece grid[8][8];
 };

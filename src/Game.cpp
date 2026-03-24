@@ -29,16 +29,26 @@ void Game::handleClick(int row, int col)
             pieceSelected = true;
         }
     }
-
-    else if (pieceSelected)
+    else
     {
         if (board.isValidMove(selectedRow, selectedCol, row, col))
         {
+            Piece temp = board.getPiece(row, col);
             board.movePiece(selectedRow, selectedCol, row, col);
-            if (currentTurn == PieceColor::White)
-                currentTurn = PieceColor::Black;
+
+            if (!board.isInCheck(currentTurn))
+            {
+                if (currentTurn == PieceColor::White)
+                    currentTurn = PieceColor::Black;
+                else
+                    currentTurn = PieceColor::White;
+            }
             else
-                currentTurn = PieceColor::White;
+            {
+                // undo the move
+                board.movePiece(row, col, selectedRow, selectedCol);
+                board.setPiece(row, col, temp);
+            }
         }
 
         selectedRow = -1;
