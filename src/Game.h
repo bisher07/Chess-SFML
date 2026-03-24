@@ -17,7 +17,7 @@ private:
 
     PieceColor currentTurn;
 
-    int selectedRow, selectedColumn;
+    int selectedRow, selectedCol;
 
     bool pieceSelected;
 };

@@ -6,7 +6,7 @@ class Board
 public:
     Board();
 
-    Piece getPiece(int row, int column);
+    Piece getPiece(int row, int col);
 
     void movePiece(int fromRow, int fromCol, int toRow, int toCol);
 
