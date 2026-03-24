@@ -6,7 +6,9 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "src/*.cpp",
+                "src/main.cpp",
+                "src/Board.cpp",
+                "src/Game.cpp",
                 "-o",
                 "bin/chess",
                 "-lsfml-graphics",
