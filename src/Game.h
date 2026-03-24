@@ -12,6 +12,18 @@ public:
 
     PieceColor getCurrentTurn();
 
+    void checkForWin();
+
+    bool isGameOver()
+    {
+        return gameOver;
+    }
+
+    PieceColor getWinner()
+    {
+        return winner;
+    }
+
 private:
     Board board;
 
@@ -20,4 +32,8 @@ private:
     int selectedRow, selectedCol;
 
     bool pieceSelected;
+
+    bool gameOver;
+
+    PieceColor winner;
 };

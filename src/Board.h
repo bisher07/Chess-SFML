@@ -18,6 +18,8 @@ public:
 
     void setPiece(int row, int col, Piece piece);
 
+    bool hasAnyValidMove(PieceColor color);
+
 private:
     Piece grid[8][8];
 };

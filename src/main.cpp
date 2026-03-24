@@ -47,32 +47,27 @@ int main()
             textures[key].loadFromFile("Assets/" + key + ".png");
         }
 
-    for (auto &t : textures)
-    {
-        if (t.second.getSize().x == 0)
-            std::cout << "Failed to load: " << t.first << std::endl;
-        else
-            std::cout << "Loaded: " << t.first << std::endl;
-    }
+    // load font
+    sf::Font font;
+    if (!font.loadFromFile("Assets/Inter_24pt-SemiBold.ttf"))
+        std::cout << "Failed to load font!" << std::endl;
 
     Game game;
     sf::RectangleShape tile(sf::Vector2f(TILE_SIZE, TILE_SIZE));
-    sf::RectangleShape highlight(sf::Vector2f(TILE_SIZE, TILE_SIZE));
-    highlight.setFillColor(sf::Color(0, 255, 0, 100));
 
     while (window.isOpen())
     {
+        // 1. handle events
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed && !game.isGameOver())
             {
                 int col = event.mouseButton.x / TILE_SIZE;
                 int row = event.mouseButton.y / TILE_SIZE;
-
                 if (row >= 0 && row < 8 && col >= 0 && col < 8)
                     game.handleClick(row, col);
             }
@@ -80,7 +75,7 @@ int main()
 
         window.clear();
 
-        // draw board
+        // 2. draw board and pieces
         for (int row = 0; row < BOARD_SIZE; row++)
         {
             for (int col = 0; col < BOARD_SIZE; col++)
@@ -93,22 +88,51 @@ int main()
                 tile.setPosition(col * TILE_SIZE, row * TILE_SIZE);
                 window.draw(tile);
 
-                // draw piece
                 Piece p = game.getBoard().getPiece(row, col);
                 if (p.type != PieceType::empty)
                 {
                     std::string key = getPieceKey(p);
                     sf::Sprite sprite;
                     sprite.setTexture(textures[key]);
-
                     float scaleX = (float)TILE_SIZE / textures[key].getSize().x;
                     float scaleY = (float)TILE_SIZE / textures[key].getSize().y;
                     sprite.setScale(scaleX, scaleY);
-
                     sprite.setPosition(col * TILE_SIZE, row * TILE_SIZE);
                     window.draw(sprite);
                 }
             }
+        }
+
+        // 3. draw winning screen
+        if (game.isGameOver())
+        {
+            // dark overlay
+            sf::RectangleShape overlay(sf::Vector2f(640, 640));
+            overlay.setFillColor(sf::Color(0, 0, 0, 150));
+            window.draw(overlay);
+
+            // white box
+            sf::RectangleShape box(sf::Vector2f(400, 120));
+            box.setFillColor(sf::Color(255, 255, 255, 220));
+            box.setPosition(120, 260);
+            window.draw(box);
+
+            // text
+            sf::Text text;
+            text.setFont(font);
+            text.setCharacterSize(42);
+            text.setFillColor(sf::Color::Black);
+
+            if (game.getWinner() == PieceColor::White)
+                text.setString("White Wins!");
+            else if (game.getWinner() == PieceColor::Black)
+                text.setString("Black Wins!");
+            else
+                text.setString("Stalemate!");
+
+            sf::FloatRect textBounds = text.getLocalBounds();
+            text.setPosition(320 - textBounds.width / 2, 290);
+            window.draw(text);
         }
 
         window.display();

@@ -6,6 +6,8 @@ Game::Game()
     pieceSelected = false;
     selectedRow = -1;
     selectedCol = -1;
+    gameOver = false;
+    winner = PieceColor::empty;
 }
 
 Board &Game::getBoard()
@@ -42,6 +44,8 @@ void Game::handleClick(int row, int col)
                     currentTurn = PieceColor::Black;
                 else
                     currentTurn = PieceColor::White;
+
+                checkForWin();
             }
             else
             {
@@ -54,5 +58,20 @@ void Game::handleClick(int row, int col)
         selectedRow = -1;
         selectedCol = -1;
         pieceSelected = false;
+    }
+}
+
+void Game::checkForWin()
+{
+    if (board.isInCheck(currentTurn) && !board.hasAnyValidMove(currentTurn))
+    {
+        gameOver = true;
+        winner = currentTurn == PieceColor::White ? PieceColor::Black : PieceColor::White;
+    }
+
+    else if (!board.isInCheck(currentTurn) && !board.hasAnyValidMove(currentTurn))
+    {
+        gameOver = true;
+        winner = PieceColor::empty;
     }
 }
