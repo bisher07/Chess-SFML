@@ -16,10 +16,17 @@ A simple chess game built using **C++** and **SFML**, featuring move validation,
 
 ---
 
+## How to run
+1. Clone the repo
+2. Build with g++ and SFML
+3. Run bin/chess.exe
+
+---
+
 ## 🛠️ Technologies Used
 
 - C++
-- SFML (Simple and Fast Multimedia Library)
+- SFML 2.6 (Simple and Fast Multimedia Library)
 - Object-Oriented Programming (OOP)
 
 ---
