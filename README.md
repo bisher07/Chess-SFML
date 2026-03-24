@@ -1,1 +1,26 @@
-# Chess-SFML
+# Chess-SFML Game ♟️
+A simple chess game built using C++ and SFML, featuring move validation, piece logic, and a graphical board interface.
+
+
+📌 Features
+Full chessboard UI using SFML
+All standard chess piece movements:
+Pawn, Rook, Knight, Bishop, Queen, King
+Move validation (illegal moves are rejected)
+Turn-based gameplay (White vs Black)
+Capture mechanics
+Clean object-oriented design (OOP)
+
+
+🛠️ Technologies Used
+C++
+SFML (Simple and Fast Multimedia Library)
+Object-Oriented Programming (OOP
+)
+
+
+💡 What I Learned
+Implementing game logic in C++
+Applying OOP in a real project
+Handling 2D graphics using SFML
+Debugging and structuring larger programs
