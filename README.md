@@ -17,9 +17,9 @@ A simple chess game built using **C++** and **SFML**, featuring move validation,
 ---
 
 ## How to run
-1. Clone the repo
-2. Build with g++ and SFML
-3. Run bin/chess.exe
+- Clone the repo
+- Build with g++ and SFML
+- Run bin/chess.exe
 
 ---
 
