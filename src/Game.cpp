@@ -32,13 +32,17 @@ void Game::handleClick(int row, int col)
 
     else if (pieceSelected)
     {
-        board.movePiece(selectedRow, selectedCol, row, col);
+        if (board.isValidMove(selectedRow, selectedCol, row, col))
+        {
+            board.movePiece(selectedRow, selectedCol, row, col);
+            if (currentTurn == PieceColor::White)
+                currentTurn = PieceColor::Black;
+            else
+                currentTurn = PieceColor::White;
+        }
+
         selectedRow = -1;
         selectedCol = -1;
         pieceSelected = false;
-        if (currentTurn == PieceColor::White)
-            currentTurn = PieceColor::Black;
-        else
-            currentTurn = PieceColor::White;
     }
 }

@@ -10,6 +10,8 @@ public:
 
     void movePiece(int fromRow, int fromCol, int toRow, int toCol);
 
+    bool isValidMove(int fromRow, int fromCol, int toRow, int toCol);
+
     bool isEmpty(int row, int col);
 
 private:

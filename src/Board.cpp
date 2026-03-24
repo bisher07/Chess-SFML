@@ -1,4 +1,5 @@
 #include "Board.h"
+#include <cmath>
 
 Board::Board()
 {
@@ -78,4 +79,121 @@ bool Board::isEmpty(int row, int col)
         return true;
     else
         return false;
+}
+
+bool Board::isValidMove(int fromRow, int fromCol, int toRow, int toCol)
+{
+    Piece piece = grid[fromRow][fromCol];
+
+    if (toRow < 0 || toRow >= 8 || toCol < 0 || toCol >= 8)
+        return false;
+
+    if (grid[toRow][toCol].color == piece.color)
+        return false;
+
+    if (piece.type == PieceType::Pawn)
+    {
+        int direction = (piece.color == PieceColor::White) ? -1 : 1;
+
+        if (!(toRow == fromRow + direction && toCol == fromCol))
+        {
+            if (toRow == fromRow + direction && (toCol == fromCol + 1 || toCol == fromCol - 1) && !isEmpty(toRow, toCol) && grid[toRow][toCol].color != piece.color)
+                return true;
+
+            return false;
+        }
+
+        if (!isEmpty(toRow, toCol))
+            return false;
+
+        return true;
+    }
+
+    else if (piece.type == PieceType::Rook)
+    {
+        if (fromRow != toRow && fromCol != toCol)
+            return false;
+
+        if (fromRow == toRow)
+        {
+            int step = (toCol > fromCol) ? 1 : -1;
+            for (int col = fromCol + step; col != toCol; col += step)
+            {
+                if (!isEmpty(fromRow, col))
+                    return false;
+            }
+        }
+        else
+        {
+            int step = (toRow > fromRow) ? 1 : -1;
+            for (int row = fromRow + step; row != toRow; row += step)
+            {
+                if (!isEmpty(row, fromCol))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    else if (piece.type == PieceType::Knight)
+    {
+        if (!(abs(toRow - fromRow) == 2 && abs(toCol - fromCol) == 1) && !(abs(toCol - fromCol) == 2 && abs(toRow - fromRow) == 1))
+            return false;
+        else if (grid[toRow][toCol].color == piece.color)
+            return false;
+
+        return true;
+    }
+
+    else if (piece.type == PieceType::Bishop)
+    {
+        if (!(abs(toRow - fromRow) == abs(toCol - fromCol)))
+            return false;
+        else
+        {
+            if (toRow > fromRow && toCol > fromCol)
+            {
+                for (int row = fromRow + 1, col = fromCol + 1; row < toRow; row++, col++)
+                {
+                    if (!isEmpty(row, col))
+                        return false;
+                }
+            }
+
+            else if (toRow > fromRow && toCol < fromCol)
+            {
+                for (int row = fromRow + 1, col = fromCol - 1; row < toRow; row++, col--)
+                {
+                    if (!isEmpty(row, col))
+                        return false;
+                }
+            }
+
+            else if (toRow < fromRow && toCol > fromCol)
+            {
+                for (int row = fromRow - 1, col = fromCol + 1; row > toRow; row--, col++)
+                {
+                    if (!isEmpty(row, col))
+                        return false;
+                }
+            }
+
+            else if (toRow < fromRow && toCol < fromCol)
+            {
+                for (int row = fromRow - 1, col = fromCol - 1; row > toRow; row--, col--)
+                {
+                    if (!isEmpty(row, col))
+                        return false;
+                }
+            }
+        }
+
+        if (grid[toRow][toCol].color == piece.color)
+            return false;
+
+        return true;
+    }
+
+    return false;
 }
