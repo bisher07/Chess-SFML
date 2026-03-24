@@ -195,5 +195,80 @@ bool Board::isValidMove(int fromRow, int fromCol, int toRow, int toCol)
         return true;
     }
 
+    else if (piece.type == PieceType::Queen)
+    {
+        if (grid[toRow][toCol].color == piece.color)
+            return false;
+
+        if (fromRow == toRow)
+        {
+            int step = (toCol > fromCol) ? 1 : -1;
+            for (int col = fromCol + step; col != toCol; col += step)
+            {
+                if (!isEmpty(fromRow, col))
+                    return false;
+            }
+        }
+
+        else if (fromCol == toCol)
+        {
+            int step = (toRow > fromRow) ? 1 : -1;
+            for (int row = fromRow + step; row != toRow; row += step)
+            {
+                if (!isEmpty(row, fromCol))
+                    return false;
+            }
+        }
+
+        if (toRow > fromRow && toCol > fromCol)
+        {
+            for (int row = fromRow + 1, col = fromCol + 1; row < toRow; row++, col++)
+            {
+                if (!isEmpty(row, col))
+                    return false;
+            }
+        }
+
+        else if (toRow > fromRow && toCol < fromCol)
+        {
+            for (int row = fromRow + 1, col = fromCol - 1; row < toRow; row++, col--)
+            {
+                if (!isEmpty(row, col))
+                    return false;
+            }
+        }
+
+        else if (toRow < fromRow && toCol > fromCol)
+        {
+            for (int row = fromRow - 1, col = fromCol + 1; row > toRow; row--, col++)
+            {
+                if (!isEmpty(row, col))
+                    return false;
+            }
+        }
+
+        else if (toRow < fromRow && toCol < fromCol)
+        {
+            for (int row = fromRow - 1, col = fromCol - 1; row > toRow; row--, col--)
+            {
+                if (!isEmpty(row, col))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    else if (piece.type == PieceType::King)
+    {
+        if (abs(toRow - fromRow) > 1 || abs(toCol - fromCol) > 1)
+            return false;
+
+        else if (grid[toRow][toCol].color == piece.color)
+            return false;
+
+        return true;
+    }
+
     return false;
 }
