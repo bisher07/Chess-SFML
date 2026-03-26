@@ -66,10 +66,30 @@ int main()
 
             if (event.type == sf::Event::MouseButtonPressed && !game.isGameOver())
             {
-                int col = event.mouseButton.x / TILE_SIZE;
-                int row = event.mouseButton.y / TILE_SIZE;
-                if (row >= 0 && row < 8 && col >= 0 && col < 8)
-                    game.handleClick(row, col);
+                int x = event.mouseButton.x;
+                int y = event.mouseButton.y;
+
+                if (game.isAwaitingPromotion())
+                {
+                    if (y >= 280 && y <= 360)
+                    {
+                        if (x >= 160 && x < 240)
+                            game.promotePawn(PieceType::Queen);
+                        else if (x >= 240 && x < 320)
+                            game.promotePawn(PieceType::Rook);
+                        else if (x >= 320 && x < 400)
+                            game.promotePawn(PieceType::Bishop);
+                        else if (x >= 400 && x < 480)
+                            game.promotePawn(PieceType::Knight);
+                    }
+                }
+                else
+                {
+                    int col = x / TILE_SIZE;
+                    int row = y / TILE_SIZE;
+                    if (row >= 0 && row < 8 && col >= 0 && col < 8)
+                        game.handleClick(row, col);
+                }
             }
         }
 
@@ -100,6 +120,39 @@ int main()
                     sprite.setPosition(col * TILE_SIZE, row * TILE_SIZE);
                     window.draw(sprite);
                 }
+            }
+        }
+
+        if (game.isAwaitingPromotion())
+        {
+            // dark overlay
+            sf::RectangleShape overlay(sf::Vector2f(640, 640));
+            overlay.setFillColor(sf::Color(0, 0, 0, 150));
+            window.draw(overlay);
+
+            // 4 boxes
+            std::string promotionPieces[4] = {"Q", "R", "B", "N"};
+            std::string colorPrefix = (game.getCurrentTurn() == PieceColor::White) ? "w" : "b";
+
+            for (int i = 0; i < 4; i++)
+            {
+                // draw box
+                sf::RectangleShape box(sf::Vector2f(80, 80));
+                box.setFillColor(sf::Color(255, 255, 255, 220));
+                box.setOutlineColor(sf::Color::Black);
+                box.setOutlineThickness(2);
+                box.setPosition(160 + i * 80, 280);
+                window.draw(box);
+
+                // draw piece image
+                std::string key = colorPrefix + promotionPieces[i];
+                sf::Sprite sprite;
+                sprite.setTexture(textures[key]);
+                float scaleX = (float)TILE_SIZE / textures[key].getSize().x;
+                float scaleY = (float)TILE_SIZE / textures[key].getSize().y;
+                sprite.setScale(scaleX, scaleY);
+                sprite.setPosition(160 + i * 80, 280);
+                window.draw(sprite);
             }
         }
 

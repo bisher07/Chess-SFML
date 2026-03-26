@@ -314,33 +314,34 @@ void Board::setPiece(int row, int col, Piece piece)
 bool Board::hasAnyValidMove(PieceColor color)
 {
     for (int row = 0; row < 8; row++)
-    {
         for (int col = 0; col < 8; col++)
         {
-            if (grid[row][col].color == color)
-            {
-                for (int i = 0; i < 8; i++)
+            if (grid[row][col].color != color)
+                continue; // ← skip non-friendly pieces fast
+
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
                 {
-                    for (int j = 0; j < 8; j++)
+                    if (grid[i][j].color == color)
+                        continue; // ← skip friendly squares fast
+
+                    if (isValidMove(row, col, i, j))
                     {
-                        if (isValidMove(row, col, i, j))
-                        {
-                            Piece temp = getPiece(i, j);
-                            movePiece(row, col, i, j);
-                            if (!isInCheck(color))
-                            {
-                                movePiece(i, j, row, col);
-                                setPiece(i, j, temp);
-                                return true;
-                            }
-                            movePiece(i, j, row, col);
-                            setPiece(i, j, temp);
-                        }
+                        Piece temp = grid[i][j];
+                        Piece moving = grid[row][col];
+                        grid[i][j] = moving;
+                        grid[row][col].type = PieceType::empty;
+                        grid[row][col].color = PieceColor::empty;
+
+                        bool inCheck = isInCheck(color);
+
+                        grid[row][col] = moving;
+                        grid[i][j] = temp;
+
+                        if (!inCheck)
+                            return true;
                     }
                 }
-            }
         }
-    }
-
     return false;
 }

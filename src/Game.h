@@ -24,6 +24,12 @@ public:
         return winner;
     }
 
+    void checkPawnPromotion(int row, int col);
+
+    void promotePawn(PieceType type);
+
+    bool isAwaitingPromotion();
+
 private:
     Board board;
 
@@ -36,4 +42,8 @@ private:
     bool gameOver;
 
     PieceColor winner;
+
+    bool awaitingPromotion;
+
+    int promotionRow, promotionCol;
 };
